@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
+#include <stack>
 using namespace std;
 
 struct Item {
@@ -16,15 +17,15 @@ struct Item {
 class Boat {
 public:
     Boat(int capacity);
-    Boat(); //Dummy constructor
+    Boat();
     int getCapacity() const;
-    void print() const;
-    bool cantAddMore(const Boat& boat, int minValueItem) const;
+    void print(stack<Item> itemStack) const;
+    bool cantAddMore(int minValueItem) const;
     void addItem(const Item& item);
     void removeItem();
     const vector<Item>& getItems() const;
-    int getTotalValue() const;  // Method to calculate total value
-    int getNumberOfItems() const;  // Method to get number of items
+    int getTotalValue() const;
+    int getNumberOfItems() const;
 
 private:
     int capacity;

@@ -1,31 +1,34 @@
 #include "Boat.h"
+#include <stack>
 
 Boat::Boat(int capacity)
     : capacity(capacity) {}
 
 Boat::Boat(){
-    capacity = std::numeric_limits<int>::max();
+    capacity = numeric_limits<int>::max();
+    
 }
 
 int Boat::getCapacity() const {
     return capacity;
 }
 
-void Boat::print() const {
+void Boat::print(stack<Item> itemStack) const {
     cout << "Boat Capacity: " << capacity << endl;
     cout << "Items on the boat:" << endl;
-    for (size_t i = 0; i < items.size(); ++i) {
-        const auto& item = items[i];
-        cout << "Item" << i << " - Weight: " << item.weight << ", Value: " << item.value << endl;
+    while (!itemStack.empty()) {
+        const auto& item = itemStack.top();
+        cout << "Weight: " << item.weight << ", Value: " << item.value << endl;
+        itemStack.pop();
     }
 }
 
-bool Boat::cantAddMore(const Boat& boat, int minValueItem) const {
+bool Boat::cantAddMore(int minValueItem) const {
     int totalWeight = 0;
-    for (const auto& existingItem : boat.getItems()) {
+    for (const auto& existingItem : items) {
         totalWeight += existingItem.weight;
     }
-    return (totalWeight + minValueItem > boat.getCapacity());
+    return (totalWeight + minValueItem > capacity);
 }
 
 void Boat::addItem(const Item& item) {
@@ -44,7 +47,7 @@ const vector<Item>& Boat::getItems() const {
     return items;
 }
 
-int Boat::getTotalValue() const {  // Implementation of the method to calculate total value
+int Boat::getTotalValue() const {
     int totalValue = 0;
     for (const auto& item : items) {
         totalValue += item.value;
@@ -52,6 +55,6 @@ int Boat::getTotalValue() const {  // Implementation of the method to calculate 
     return totalValue;
 }
 
-int Boat::getNumberOfItems() const {  // Implementation of the method to get number of items
+int Boat::getNumberOfItems() const {
     return items.size();
 }

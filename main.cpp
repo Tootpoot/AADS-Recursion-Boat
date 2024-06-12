@@ -6,14 +6,14 @@ using namespace std;
 int minValueItem = 0; // Global variable
 
 void solve(Boat &curr_boat, Boat &best_boat, stack<Item>& itemStack, const vector<Item>& items) {
-    if(cantAddMore(curr_boat, minValItem)){
+    if(curr_boat.cantAddMore(minValueItem)){
         if(curr_boat.getTotalValue() > best_boat.getTotalValue()){
             best_boat = curr_boat;
         }
     }
     else {
-        for(int i = 0; i< curr_boat.getNumberofItems(); i++){
-            itemStack.push(item[i]);
+        for(int i = 0; i< curr_boat.getNumberOfItems(); i++){
+            itemStack.push(items[i]);
             solve(curr_boat, best_boat, itemStack, items);
             curr_boat.removeItem();
         }
@@ -84,7 +84,7 @@ int main() {
     solve(myBoat, best_boat, itemStack, items);
 
     if(best_boat.getTotalValue() < std::numeric_limits<int>::max())
-        best_boat.print();
+        best_boat.print(itemStack);
     else   
         cout << "No answer found. \n";
 
