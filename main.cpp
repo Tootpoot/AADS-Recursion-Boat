@@ -29,7 +29,7 @@ int main() {
     }
 
     // Create a Boat object
-    Boat myBoat(500);
+    Boat myBoat(32);
 
     // Determine the minimum value item
     int minValueItem = 0;
