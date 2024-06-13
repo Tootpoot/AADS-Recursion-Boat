@@ -33,6 +33,7 @@ public:
     int getCapacity() const;
     void print() const;
     bool cantAddMore(int minVal) const;
+    int getItemWeight(int i) const;
 };
 
 #endif // BOAT_H

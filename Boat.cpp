@@ -1,61 +1,6 @@
-// #include "Boat.h"
-
-// Boat::Boat(int capacity)
-//     : capacity(capacity), totalValue(0) {}
-
-// // void Boat::print() const {
-// //     std::cout << "Boat Capacity: " << capacity << std::endl;
-// //     std::cout << "Items on the boat:" << std::endl;
-// //     for (size_t i = 0; i < partial_solution.size(); ++i) {
-// //         const auto& item = partial_solution[i];
-// //         std::cout << "Item" << i << " - Weight: " << item.weight << ", Value: " << item.value << std::endl;
-// //     }
-// // }
-
-// // bool Boat::cantAddMore(int minValueItem) {
-// //     int totalWeight = 0;
-// //     for (const auto& item : partial_solution) {
-// //         totalWeight += item.weight;
-// //     }
-// //     return (totalWeight + minValueItem > capacity);
-// // }
-
-// void Boat::addItem(int index) {
-//     partial_solution.push_back(index);
-//     totalValue += boatItemList[index].value;
-// }
-
-// void Boat::removeItem() {
-//     if (!partial_solution.empty()) {
-//         totalValue -= boatItemList.back().value;
-//         partial_solution.pop_back();
-//     } else {
-//         std::cout << "No items to remove." << std::endl;
-//     }
-// }
-
-// int Boat::getTotalValue()  {
-//     return totalValue;
-// }
-
-// int Boat::getListSize() {
-//     return boatItemList.size();
-// }
-
-// int Boat::getWeight()  {
-//     int totalWeight = 0;
-//     for (const auto& item : partial_solution) {
-//         totalWeight += item.weight;
-//     }
-//     return totalWeight;
-// }
-
-// std::vector<int> Boat::getPartialSolution() {
-//     return partial_solution;
-// }
-
 #include "Boat.h"
 #include <iostream>
+#include <map>
 
 using namespace std;
 
@@ -81,16 +26,47 @@ void Boat::removeItem() {
 }
 
 void Boat:: print() const {
+    int counter = 0;
+    map<int, int> counts;
     cout<< "The solution contains: " << endl;
-    for(int i = 0; i < partial_solution.size(); i++){
-        cout << "Item" << partial_solution[i] << endl;
+    for(const auto& item: partial_solution){
+        counts[item]++;
     }
-    cout << "Total Weight: " <<totalWeight << endl;
-    cout << "Total Value: " << totalValue << endl;
+
+    for(const auto& pair : counts){
+        cout << pair.second << " Item" << pair.first << endl;
+    }
+
+    cout << endl << "Total weight: ";
+    int weight_sum = 0;
+    bool first = true;
+    for(const auto& pair : counts){
+        if (!first) {
+            cout << " + ";
+        }
+        cout << pair.second << " * " << boatItemList[pair.first].weight;
+        weight_sum += pair.second * boatItemList[pair.first].weight;
+        first = false;
+    }
+    cout << " = " << weight_sum << endl;
+
+    cout << "Total value: ";
+    int value_sum = 0;
+    first = true;
+    for(const auto& pair : counts){
+        if (!first) {
+            cout << " + ";
+        }
+        cout << pair.second << " * " << boatItemList[pair.first].value;
+        value_sum += pair.second * boatItemList[pair.first].value;
+        first = false;
+    }
+    cout << " = " << value_sum << endl;
+
+
 }
 
 bool Boat::cantAddMore(int minVal) const {
-    cout << "Function called weight is: " << totalWeight << endl;
     return (totalWeight + minVal >= capacity);
 }
 
@@ -108,4 +84,8 @@ int Boat::getListSize() const {
 
 int Boat::getCapacity() const {
     return capacity;
+}
+
+int Boat::getItemWeight(int i) const {
+    return boatItemList[i].weight;
 }
