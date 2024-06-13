@@ -86,8 +86,8 @@ using namespace std;
 int globalMinWeight = 100000;
 
 void solve(Boat& curr_boat, Boat& best_boat) {
-    if(curr_boat.getTotalWeight() > curr_boat.getCapacity())
-        cout << "ERROR " << endl;
+    cout << "Total Weight: " << curr_boat.getTotalWeight() << endl;
+    cout << "Total Value: " << curr_boat.getTotalValue() << endl << endl;
     if (curr_boat.cantAddMore(globalMinWeight)) {
         if (curr_boat.getTotalValue() > best_boat.getTotalValue()) {
             best_boat = curr_boat;

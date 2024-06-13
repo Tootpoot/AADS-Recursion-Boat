@@ -63,12 +63,11 @@ Boat::Boat(int capacity) {
     this->capacity = capacity;
     totalValue = 0;
     totalWeight = 0;
-    // Initialize other members as needed
 }
 
 void Boat::addItem(int index) {
     partial_solution.push_back(index);
-    totalValue += boatItemList[index].value; //There is nothing being added to boatItemList
+    totalValue += boatItemList[index].value;
     totalWeight += boatItemList[index].weight;
 }
 
@@ -91,7 +90,8 @@ void Boat:: print() const {
 }
 
 bool Boat::cantAddMore(int minVal) const {
-    return (totalWeight + minVal > capacity);
+    cout << "Function called weight is: " << totalWeight << endl;
+    return (totalWeight + minVal >= capacity);
 }
 
 int Boat::getTotalValue() const {
