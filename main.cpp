@@ -1,112 +1,147 @@
+// #include <iostream>
+// #include <vector>
+// #include <algorithm>
+// #include "Boat.h"
+// using namespace std;
+
+// int minValueItem = 0;
+
+// void solve(Boat& curr_boat, Boat& best_boat) {
+//     if (curr_boat.cantAddMore(minValueItem)) {
+//         if (curr_boat.getTotalValue() > best_boat.getTotalValue()) {
+//             best_boat = curr_boat;
+//         }
+//     } else {
+//         for (int i = 0; i < curr_boat.getListSize(); i++) {
+//             curr_boat.addItem(i);
+//             solve(curr_boat, best_boat);
+//             curr_boat.removeItem();
+//         }
+//     }
+// }
+
+// int main() {
+//     int boatCapacity;
+//     int numItems;
+
+//     cout << "Enter the boat capacity: ";
+//     cin >> boatCapacity;
+
+//     cout << "Enter the number of items for boats: ";
+//     cin >> numItems;
+
+    // vector<Item> items;
+
+    // // Loop to get weight and value for each item and store them in the vector
+    // for (int i = 0; i < numItems; ++i) {
+    //     int weight, value;
+    //     cout << "Enter weight and value for item " << i + 1 << ": ";
+    //     cin >> weight >> value;
+    //     items.push_back(Item(weight, value));
+    // }
+
+    // // Display items stored in the vector
+    // cout << "Items stored in the vector:" << endl;
+    // for (size_t i = 0; i < items.size(); ++i) {
+    //     const auto& item = items[i];
+    //     cout << "Item" << i << " - Weight: " << item.weight << ", Value: " << item.value << endl;
+    // }
+
+//     // Find the minimum value item based on weight
+//     if (!items.empty()) {
+//         auto minValItem = min_element(items.begin(), items.end(), [](const Item& a, const Item& b) {
+//             return a.value < b.value;
+//         });
+//         minValueItem = minValItem->weight;
+//     }
+//     cout<< "Min value found: " << minValueItem << endl;
+
+//     // Create boats
+//     Boat myBoat(boatCapacity);
+//     Boat best_boat(boatCapacity);
+
+    // // Perform the recursive solving
+    // solve(myBoat, best_boat);
+
+//     // Output the results
+//     cout << "Best Boat Details:" << endl;
+//     best_boat.print();
+//     cout << "Best Boat Total Value: " << best_boat.getTotalValue() << endl;
+//     cout << "Best Boat Number of Items: " << best_boat.getListSize() << endl;
+//     cout << "Items in the Best Boat's Partial Solution:" << endl;
+//     for (int index : best_boat.getPartialSolution()) {
+//         cout << "Item" << index << " - Weight: " << items[index].weight << ", Value: " << items[index].value << endl;
+//     }
+
+//     return 0;
+// }
+
+
 #include <iostream>
-#include <stack>
+#include <vector>
 #include "Boat.h"
+
 using namespace std;
 
-int minValueItem = 0; // Global variable
+int globalMinWeight = 100000;
 
-void solve(Boat &curr_boat, Boat &best_boat, stack<Item>& itemStack, const vector<Item>& items) {
-    if(curr_boat.cantAddMore(minValueItem)){
-        if(curr_boat.getTotalValue() > best_boat.getTotalValue()){
+void solve(Boat& curr_boat, Boat& best_boat) {
+    if(curr_boat.getTotalWeight() > curr_boat.getCapacity())
+        cout << "ERROR " << endl;
+    if (curr_boat.cantAddMore(globalMinWeight)) {
+        if (curr_boat.getTotalValue() > best_boat.getTotalValue()) {
             best_boat = curr_boat;
         }
-    }
-    else {
-        for(int i = 0; i< curr_boat.getNumberOfItems(); i++){
-            itemStack.push(items[i]);
-            solve(curr_boat, best_boat, itemStack, items);
+    } else {
+        for (int i = 0; i < curr_boat.getListSize(); i++) {
+            curr_boat.addItem(i);
+            solve(curr_boat, best_boat);
             curr_boat.removeItem();
         }
     }
 }
 
+
 int main() {
-    int boatCapacity;
+    int capacity, num_items;
 
-    // Ask the user for the boat capacity
-    cout << "Enter the boat capacity: ";
-    cin >> boatCapacity;
+    cout << "Enter the weight capacity of the boat: ";
+    cin >> capacity;
 
-    // Create a Boat object with user-provided capacity
-    Boat myBoat(boatCapacity);
+    cout << "Enter number of items for the boat: ";
+    cin >> num_items;
 
-    int numItems;
+    Boat curr_boat(capacity);
+    Boat best_boat(capacity);
 
-    // Prompt the user for the number of items
-    cout << "Enter the number of items: ";
-    cin >> numItems;
-
-    // Create a vector to hold Items
     vector<Item> items;
 
     // Loop to get weight and value for each item and store them in the vector
-    for (int i = 0; i < numItems; ++i) {
+    for (int i = 0; i < num_items; ++i) {
         int weight, value;
         cout << "Enter weight and value for item " << i + 1 << ": ";
         cin >> weight >> value;
-        items.push_back(Item(weight, value));
+        curr_boat.boatItemList.push_back(Item(weight, value));
+
+        if (weight < globalMinWeight) {
+            globalMinWeight = weight;
+        }
     }
 
     // Display items stored in the vector
     cout << "Items stored in the vector:" << endl;
-    for (size_t i = 0; i < items.size(); ++i) {
-        const auto& item = items[i];
+    for (size_t i = 0; i < curr_boat.boatItemList.size(); ++i) {
+        const auto& item = curr_boat.boatItemList[i];
         cout << "Item" << i << " - Weight: " << item.weight << ", Value: " << item.value << endl;
     }
 
-    // Determine the minimum value item
-    if (!items.empty()) {
-        auto minValItem = min_element(items.begin(), items.end(), [](const Item& a, const Item& b) {
-            return a.value < b.value;
-        });
-        minValueItem = minValItem->weight;
-    }
+    cout << "globalMinWeight = " << globalMinWeight<< endl;
 
-    // Create a stack to hold Items
-    stack<Item> itemStack;
+    // Perform the recursive solving
+    solve(curr_boat, best_boat);
 
-    // // Push items from the vector to the stack if they can be added to the boat
-    // for (const auto& item : items) {
-    //     if (!myBoat.cantAddMore(myBoat, minValueItem)) {
-    //         itemStack.push(item);
-    //         myBoat.addItem(item);
-    //     } else {
-    //         cout << "Cannot add item with weight: " << item.weight << " and value: " << item.value << " as it exceeds boat capacity." << endl;
-    //     }
-    // }
-
-    // Display the boat's current state
-    // myBoat.print();
-
-    //Create empty boat object
-    Boat best_boat;
-    // Call the function to demonstrate accessing minValueItem
-    solve(myBoat, best_boat, itemStack, items);
-
-    if(best_boat.getTotalValue() < std::numeric_limits<int>::max())
-        best_boat.print(itemStack);
-    else   
-        cout << "No answer found. \n";
-
-    // // Access and pop items from the stack
-    // cout << "Removing items from the stack and boat:" << endl;
-    // while (!itemStack.empty()) {
-    //     Item topItem = itemStack.top();
-    //     cout << "Removing item with Weight: " << topItem.weight << ", Value: " << topItem.value << endl;
-    //     itemStack.pop();
-    //     myBoat.removeItem();
-    // }
-
-    // // Display the boat's final state
-    // myBoat.print();
-
-    // // Demonstrate accessing items stored in the boat
-    // const vector<Item>& storedItems = myBoat.getItems();
-    // cout << "Accessing items stored in the boat:" << endl;
-    // for (size_t i = 0; i < storedItems.size(); ++i) {
-    //     const auto& item = storedItems[i];
-    //     cout << "Item" << i << " - Weight: " << item.weight << ", Value: " << item.value << endl;
-    // }
+    best_boat.print();
 
     return 0;
 }
+

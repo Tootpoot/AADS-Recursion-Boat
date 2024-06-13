@@ -1,10 +1,9 @@
 #ifndef BOAT_H
 #define BOAT_H
 
-#include <vector>
 #include <iostream>
-#include <algorithm>
-#include <stack>
+#include <vector>
+
 using namespace std;
 
 struct Item {
@@ -15,21 +14,25 @@ struct Item {
 };
 
 class Boat {
-public:
-    Boat(int capacity);
-    Boat();
-    int getCapacity() const;
-    void print(stack<Item> itemStack) const;
-    bool cantAddMore(int minValueItem) const;
-    void addItem(const Item& item);
-    void removeItem();
-    const vector<Item>& getItems() const;
-    int getTotalValue() const;
-    int getNumberOfItems() const;
-
 private:
     int capacity;
-    vector<Item> items;
+    int totalValue;
+    int totalWeight;
+    vector<int> partial_solution;
+
+public:
+    vector<Item> boatItemList;
+
+    Boat(int capacity);
+
+    void addItem(int index);
+    void removeItem();
+    int getTotalValue() const;
+    int getTotalWeight() const;
+    int getListSize() const;
+    int getCapacity() const;
+    void print() const;
+    bool cantAddMore(int minVal) const;
 };
 
 #endif // BOAT_H
